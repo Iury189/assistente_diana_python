@@ -43,6 +43,10 @@ def ExecutarDiana():
     pessoa = comando.replace('quem é', '')
     informacao = wikipedia.summary(pessoa, 1)
     FalarDiana(informacao)
+  elif 'o que é' in comando:
+    que_eh = comando.replace('o que é', '')
+    informacao = wikipedia.summary(que_eh, 1)
+    FalarDiana(informacao)
   elif 'piada' in comando:
     FalarDiana(pyjokes.get_joke())
   elif 'você está comprometida' in comando:
