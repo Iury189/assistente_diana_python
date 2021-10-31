@@ -4,7 +4,6 @@ import pywhatkit
 import datetime
 import wikipedia
 import pyjokes
-import pytz
 
 audio = speech_recognition.Recognizer()
 assistente = pyttsx3.init()
@@ -18,6 +17,7 @@ def FalarDiana(text):
 def RealizarComando():
   try:
     with speech_recognition.Microphone() as microfone:
+      global comando
       print('Aguardando comando...')
       voz = audio.listen(microfone)
       comando = audio.recognize_google(voz, language="pt-BR")
@@ -26,7 +26,7 @@ def RealizarComando():
         comando = comando.replace('Diana', '')
         print(comando)
   except:
-    print("Algo de errado no microfone, verifique se está funcionando corretamente.")
+    print("Algo de errado aconteceu")
   return comando
 
 def ExecutarDiana():
@@ -37,22 +37,19 @@ def ExecutarDiana():
     FalarDiana(f'Tocando: {musica}')
     pywhatkit.playonyt(musica)
   elif 'horário atual' in comando:
-    tempo = datetime.now(pytz.timezone('America/Sao_Paulo')).strftime('%d/%m/%Y %H:%M:%S')
+    tempo = datetime.datetime.now().strftime('%d/%m/%Y, %H:%M')
     FalarDiana(f'Horário atual: {tempo}')
-  elif 'quem é' in comando:
-    pessoa = comando.replace('quem é', '')
-    informacao = wikipedia.summary(pessoa, 1)
-    FalarDiana(informacao)
-  elif 'o que é' in comando:
-    que_eh = comando.replace('o que é', '')
-    informacao = wikipedia.summary(que_eh, 1)
+  elif 'procurar por' in comando:
+    wikipedia.set_lang('pt')
+    procurar = comando.replace('procurar por', '')
+    informacao = wikipedia.summary(procurar, 1)
     FalarDiana(informacao)
   elif 'piada' in comando:
     FalarDiana(pyjokes.get_joke())
-  elif 'você está comprometida' in comando:
+  elif 'você está comprometida?' in comando:
     FalarDiana('Estou em um relacionamento sério com Wi-fi da casa de sua avó.')
   else:
-    FalarDiana('Por favor, repita novamente o comando.')
-
+    FalarDiana('Não entendi o comando, por favor repita novamente.')
+    
 while True:
   ExecutarDiana()
