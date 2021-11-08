@@ -4,6 +4,7 @@ import pywhatkit
 import datetime
 import wikipedia
 import pyjokes
+import webbrowser
 
 audio = speech_recognition.Recognizer()
 assistente = pyttsx3.init()
@@ -15,9 +16,9 @@ def FalarDiana(text):
   assistente.runAndWait()
 
 def RealizarComando():
+  global comando
   try:
     with speech_recognition.Microphone() as microfone:
-      global comando
       print('Aguardando comando...')
       voz = audio.listen(microfone)
       comando = audio.recognize_google(voz, language="pt-BR")
@@ -25,8 +26,10 @@ def RealizarComando():
       if 'Diana' in comando:
         comando = comando.replace('Diana', '')
         print(comando)
-  except:
-    print("Algo de errado aconteceu")
+  except speech_recognition.UnknownValueError:
+    print('Não foi possível captar o áudio do microfone.')
+  except speech_recognition.RequestError:
+    print('Serviço fora do ar.')  
   return comando
 
 def ExecutarDiana():
@@ -46,8 +49,18 @@ def ExecutarDiana():
     FalarDiana(informacao)
   elif 'piada' in comando:
     FalarDiana(pyjokes.get_joke())
-  elif 'você está comprometida?' in comando:
+  elif 'abrir google' in comando:
+    url = 'https://google.com.br/'
+    webbrowser.get().open(url) 
+  elif 'você é comprometida' in comando:
     FalarDiana('Estou em um relacionamento sério com Wi-fi da casa de sua avó.')
+  elif 'eu sou o batman' in comando:
+    FalarDiana('Se você é o Batman então eu sou a Joana D\'Arc.')
+  elif 'diga seu nome' in comando:
+    FalarDiana('Meu nome é Diana, e fui criada na linguagem Python.')
+  elif 'desligar' in comando:
+    FalarDiana('Até outro momento.')
+    exit()
   else:
     FalarDiana('Não entendi o comando, por favor repita novamente.')
     
